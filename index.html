@@ -7,12 +7,21 @@
       .chart {
         font-family: sans-serif;
       }
+
+      .axis path,
+      .axis line {
+        fill: none;
+        stroke: black;
+        shape-rendering: crispEdges;
+      }
     </style>
   </head>
   <body>
     <h2>INF1234 - Koding og sånt</h2>
 
     <h3>Generelt inntrykk</h3>
+
+    <div id="historisk" class="chart"></div>
 
     <div id="generelt" class="chart"></div>
 
@@ -29,6 +38,55 @@
     <script type="text/javascript">
       var greenred6 = ['#1a9850', '#91cf60', '#d9ef8b', '#fee08b', '#fc8d59', '#d73027'];
       var hotcold5 = ['#2c7bb6', '#abd9e9', '#91cf60', '#fdae61', '#d7191c'];
+
+      var historisk_data = [
+        {
+          label: 2012,
+          data: [
+            { label: "Særdeles bra", value: 0 },
+            { label: "Meget bra", value: 12 },
+            { label: "Bra", value: 34 },
+            { label: "Greit", value: 50 },
+            { label: "Mindre bra", value: 34 },
+            { label: "Lite bra", value: 23 }
+          ]
+        },
+        {
+          label: 2013,
+          data: [
+            { label: "Særdeles bra", value: 1 },
+            { label: "Meget bra", value: 34 },
+            { label: "Bra", value: 30 },
+            { label: "Greit", value: 45 },
+            { label: "Mindre bra", value: 3 },
+            { label: "Lite bra", value: 12 }
+          ]
+        },
+        {
+          label: 2014,
+          data: [
+            { label: "Særdeles bra", value: 2 },
+            { label: "Meget bra", value: 45 },
+            { label: "Bra", value: 40 },
+            { label: "Greit", value: 23 },
+            { label: "Mindre bra", value: 3 },
+            { label: "Lite bra", value: 1 }
+          ]
+        },
+        {
+          label: 2015,
+          data: [
+            { label: "Særdeles bra", value: 10 },
+            { label: "Meget bra", value: 59 },
+            { label: "Bra", value: 34 },
+            { label: "Greit", value: 16 },
+            { label: "Mindre bra", value: 3 },
+            { label: "Lite bra", value: 0 }
+          ]
+        }
+      ]
+
+      insert_stacked("#historisk", historisk_data, greenred6);
 
       var data = [
         { label: "Særdeles bra", value: 10 },
