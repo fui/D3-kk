@@ -4,19 +4,62 @@
     <meta charset="utf-8">
     <title></title>
     <style media="screen">
-      #chart {
+      .chart {
         font-family: sans-serif;
       }
     </style>
   </head>
   <body>
+    <h2>INF1234 - Koding og sånt</h2>
+
     <h3>Generelt inntrykk</h3>
 
-    <div id="chart"></div>
+    <div id="generelt" class="chart"></div>
 
-    <p>Blablabla</p>
+    <h3>Emnets nivå</h3>
+
+    <div id="nivaa" class="chart"></div>
+
+    <h3>Arbeidsmengde i forhold til studiepoeng</h3>
+
+    <div id="arbeidsmengde" class="chart"></div>
 
     <script src="http://d3js.org/d3.v3.min.js"  charset="utf-8"></script>
     <script src="dist/index.js" charset="utf-8"></script>
+    <script type="text/javascript">
+      var greenred6 = ['#1a9850', '#91cf60', '#d9ef8b', '#fee08b', '#fc8d59', '#d73027'];
+      var hotcold5 = ['#2c7bb6', '#abd9e9', '#91cf60', '#fdae61', '#d7191c'];
+
+      var data = [
+        { label: "Særdeles bra", value: 10 },
+        { label: "Meget bra", value: 59 },
+        { label: "Bra", value: 34 },
+        { label: "Greit", value: 16 },
+        { label: "Mindre bra", value: 3 },
+        { label: "Lite bra", value: 0 }
+      ];
+
+      insert_chart("#generelt", data, greenred6);
+
+      var nivaa_data = [
+        { label: "Lett", value: 14 },
+        { label: "Noe lett", value: 18 },
+        { label: "Passe", value: 53 },
+        { label: "Noe vanskelig", value: 31 },
+        { label: "For vanskelig", value: 6 }
+      ];
+
+      insert_chart("#nivaa", nivaa_data, hotcold5);
+
+      var arbeidsmengde_data = [
+        { label: "For lav", value: 2 },
+        { label: "Lav", value: 6 },
+        { label: "Passe", value: 82 },
+        { label: "Høy", value: 24 },
+        { label: "For høy", value: 8 }
+      ];
+
+      insert_chart("#arbeidsmengde", arbeidsmengde_data, hotcold5);
+    </script>
   </body>
 </html>
