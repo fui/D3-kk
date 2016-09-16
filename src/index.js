@@ -1,7 +1,21 @@
 const width = 400;
 const height = 30;
 
-let insert_chart = function(target, data, colors) {
+const tooltip = d3.select("body").append("div")
+    .attr("class", "tooltip");
+
+function show_tooltip(message) {
+  tooltip.html(message)
+      .style("left", `${d3.event.pageX}px`)
+      .style("top", `${d3.event.pageY - 28}px`)
+      .style("opacity", 1);
+}
+
+function hide_tooltip() {
+  tooltip.style("opacity", 0);
+}
+
+function insert_chart(target, data, colors) {
   const scale = d3.scale.linear()
       .domain([0, d3.sum(data, d => d.value)])
       .range([0, width]);
@@ -12,9 +26,12 @@ let insert_chart = function(target, data, colors) {
 
   const svg = d3.select(target).append("svg")
       .attr("width", width)
-      .attr("height", height);
+      .attr("height", height)
+      .on("mouseleave", d => hide_tooltip());
 
   let curx = 0;
+
+  let expanded = false;
 
   svg.selectAll("rect")
       .data(data)
@@ -28,13 +45,15 @@ let insert_chart = function(target, data, colors) {
         return ret;
       })
       .attr("y", 0)
-      .attr("fill", (d, i) => colors[i]);
-
-  let expanded = false;
+      .attr("fill", (d, i) => colors[i])
+      .on("mousemove", d => {
+        if (!expanded) show_tooltip(`${d.label}: ${Math.round(percentage(d.value))}%`)
+      });
 
   svg.on("click", () => {
     if (!expanded) {
       svg.selectAll("text").remove();
+      hide_tooltip();
 
       let cury = 0;
       for (let i = 0; i < data.length; i++) {
@@ -130,6 +149,7 @@ let insert_stacked = function(target, data, colors) {
       .attr("height", height + margin.top + margin.bottom)
       .attr("style", `margin-left: -${margin.left}px; ` +
                      `margin-right: -${margin.right}px;`)
+      .on("mouseleave", d => hide_tooltip())
     .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
@@ -164,7 +184,8 @@ let insert_stacked = function(target, data, colors) {
     .enter().append("path")
       .attr("class", "layer")
       .attr("d", d => area(d.values))
-      .style("fill", (d, i) => colors[i]);
+      .style("fill", (d, i) => colors[i])
+      .on("mousemove", d => show_tooltip(d.key));
 
   svg.append("g")
       .attr("class", "axis")
