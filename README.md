@@ -5,6 +5,6 @@ Dette er en prototype for presentasjon av KK-data ved bruk av D3.
 ## Bygging
 
     npm install
-    npm build
+    npm run build
 
 (Og så åpne index.html)
