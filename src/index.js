@@ -6,7 +6,7 @@ const tooltip = d3.select("body").append("div")
 
 function show_tooltip(message) {
   tooltip.html(message)
-      .style("left", `${d3.event.pageX}px`)
+      .style("left", `${d3.event.pageX + 3}px`)
       .style("top", `${d3.event.pageY - 28}px`)
       .style("opacity", 1);
 }
