@@ -1,6 +1,3 @@
-const width = 400;
-const height = 30;
-
 const tooltip = d3.select("body").append("div")
     .attr("class", "tooltip");
 
@@ -15,7 +12,11 @@ function hide_tooltip() {
   tooltip.style("opacity", 0);
 }
 
-function insert_chart(target, data, colors) {
+function insert_chart(target_selector, data, colors) {
+  const target = d3.select(target_selector);
+  const width = target.node().getBoundingClientRect().width;
+  const height = 30;
+
   const scale = d3.scale.linear()
       .domain([0, d3.sum(data, d => d.value)])
       .range([0, width]);
@@ -24,7 +25,7 @@ function insert_chart(target, data, colors) {
       .domain([0, d3.sum(data, d => d.value)])
       .range([0, 100]);
 
-  const svg = d3.select(target).append("svg")
+  const svg = target.append("svg")
       .attr("width", width)
       .attr("height", height)
       .on("mouseleave", d => hide_tooltip());
@@ -121,7 +122,9 @@ function insert_chart(target, data, colors) {
   });
 };
 
-let insert_stacked = function(target, data, colors) {
+let insert_stacked = function(target_selector, data, colors) {
+  const target = d3.select(target_selector);
+  const width = target.node().getBoundingClientRect().width;
   const height = 300;
   const margin = {
     left: 30,
@@ -144,7 +147,7 @@ let insert_stacked = function(target, data, colors) {
       .domain([0, 1])
       .range([0, height]);
 
-  const svg = d3.select(target).append("svg")
+  const svg = target.append("svg")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
       .attr("style", `margin-left: -${margin.left}px; ` +
