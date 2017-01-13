@@ -56,6 +56,8 @@ function insert_chart(target_selector, data, colors) {
       svg.selectAll("text").remove();
       hide_tooltip();
 
+      const col_base = 130;
+
       let cury = 0;
       for (let i = 0; i < data.length; i++) {
         svg.select(".rect-" + i)
@@ -64,9 +66,10 @@ function insert_chart(target_selector, data, colors) {
             .attr("y", cury)
             .transition()
             .duration(100)
-            .attr("x", 130);
+            .attr("x", col_base);
 
         let font_size = 16;
+        const label_base = col_base - 5;
 
         // Make sure the text we are making will fit. Since we are not actually
         // rendering the text yet, render dummy nodes to measure.
@@ -77,13 +80,13 @@ function insert_chart(target_selector, data, colors) {
               .text(data[i].label);
           measured_text_width = dummy.node().getBoundingClientRect().width;
           dummy.remove();
-          if (measured_text_width > 125) font_size--;
-        } while (measured_text_width > 125);
+          if (measured_text_width > label_base) font_size--;
+        } while (measured_text_width > label_base);
 
         svg.append("text")
             .transition()
             .delay(200)
-            .attr("x", 125)
+            .attr("x", label_base)
             .attr("y", cury + (height / 2))
             .attr("alignment-baseline", "middle")
             .attr("dominant-baseline", "middle")
@@ -94,8 +97,8 @@ function insert_chart(target_selector, data, colors) {
         let labelinside = percentage(data[i].value) > 20;
         let col_width = scale(data[i].value);
 
-        if (col_width + 130 > width) {
-          col_width = width - 130;
+        if (col_width + col_base > width) {
+          col_width = width - col_base;
 
           // The following is just a roundabout way to draw a zig-zag marker
           // on the column, to indicate that it has been truncated.
@@ -103,7 +106,7 @@ function insert_chart(target_selector, data, colors) {
               .domain([0, 100])
               .range([0, height]);
           const area = d3.svg.line()
-              .x(d => (d.x / 3) + (130 + col_width / 2))
+              .x(d => (d.x / 3) + (col_base + col_width / 2))
               .y(d => cury + yScale(d.y));
 
           svg.append('path')
@@ -126,7 +129,7 @@ function insert_chart(target_selector, data, colors) {
         svg.append("text")
             .transition()
             .delay(200)
-            .attr("x", 130 + (labelinside ? col_width - 5 : col_width + 5))
+            .attr("x", col_base + (labelinside ? col_width - 5 : col_width + 5))
             .attr("y", cury + (height / 2))
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", labelinside ? "end" : "start")

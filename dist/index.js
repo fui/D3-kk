@@ -51,12 +51,15 @@ function insert_chart(target_selector, data, colors) {
                 svg.selectAll("text").remove();
                 hide_tooltip();
 
+                var col_base = 130;
+
                 var cury = 0;
 
                 var _loop = function _loop(i) {
-                    svg.select(".rect-" + i).transition().duration(100).attr("y", cury).transition().duration(100).attr("x", 130);
+                    svg.select(".rect-" + i).transition().duration(100).attr("y", cury).transition().duration(100).attr("x", col_base);
 
                     var font_size = 16;
+                    var label_base = col_base - 5;
 
                     // Make sure the text we are making will fit. Since we are not actually
                     // rendering the text yet, render dummy nodes to measure.
@@ -65,23 +68,23 @@ function insert_chart(target_selector, data, colors) {
                         var dummy = svg.append("text").attr("font-size", font_size + "px").text(data[i].label);
                         measured_text_width = dummy.node().getBoundingClientRect().width;
                         dummy.remove();
-                        if (measured_text_width > 125) font_size--;
-                    } while (measured_text_width > 125);
+                        if (measured_text_width > label_base) font_size--;
+                    } while (measured_text_width > label_base);
 
-                    svg.append("text").transition().delay(200).attr("x", 125).attr("y", cury + height / 2).attr("alignment-baseline", "middle").attr("dominant-baseline", "middle").attr("text-anchor", "end").attr("font-size", font_size + "px").text(data[i].label);
+                    svg.append("text").transition().delay(200).attr("x", label_base).attr("y", cury + height / 2).attr("alignment-baseline", "middle").attr("dominant-baseline", "middle").attr("text-anchor", "end").attr("font-size", font_size + "px").text(data[i].label);
 
                     var labelinside = percentage(data[i].value) > 20;
                     var col_width = scale(data[i].value);
 
-                    if (col_width + 130 > width) {
+                    if (col_width + col_base > width) {
                         (function () {
-                            col_width = width - 130;
+                            col_width = width - col_base;
 
                             // The following is just a roundabout way to draw a zig-zag marker
                             // on the column, to indicate that it has been truncated.
                             var yScale = d3.scale.linear().domain([0, 100]).range([0, height]);
                             var area = d3.svg.line().x(function (d) {
-                                return d.x / 3 + (130 + col_width / 2);
+                                return d.x / 3 + (col_base + col_width / 2);
                             }).y(function (d) {
                                 return cury + yScale(d.y);
                             });
@@ -90,7 +93,7 @@ function insert_chart(target_selector, data, colors) {
                         })();
                     }
 
-                    svg.append("text").transition().delay(200).attr("x", 130 + (labelinside ? col_width - 5 : col_width + 5)).attr("y", cury + height / 2).attr("dominant-baseline", "middle").attr("text-anchor", labelinside ? "end" : "start").text(Math.round(percentage(data[i].value)) + "%");
+                    svg.append("text").transition().delay(200).attr("x", col_base + (labelinside ? col_width - 5 : col_width + 5)).attr("y", cury + height / 2).attr("dominant-baseline", "middle").attr("text-anchor", labelinside ? "end" : "start").text(Math.round(percentage(data[i].value)) + "%");
 
                     cury += height;
                 };
