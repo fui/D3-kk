@@ -66,6 +66,20 @@ function insert_chart(target_selector, data, colors) {
             .duration(100)
             .attr("x", 130);
 
+        let font_size = 16;
+
+        // Make sure the text we are making will fit. Since we are not actually
+        // rendering the text yet, render dummy nodes to measure.
+        let measured_text_width;
+        do {
+          const dummy = svg.append("text")
+              .attr("font-size", font_size + "px")
+              .text(data[i].label);
+          measured_text_width = dummy.node().getBoundingClientRect().width;
+          dummy.remove();
+          if (measured_text_width > 125) font_size--;
+        } while (measured_text_width > 125);
+
         svg.append("text")
             .transition()
             .delay(200)
@@ -74,15 +88,45 @@ function insert_chart(target_selector, data, colors) {
             .attr("alignment-baseline", "middle")
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", "end")
+            .attr("font-size", font_size + "px")
             .text(data[i].label);
 
         let labelinside = percentage(data[i].value) > 20;
-        let width = scale(data[i].value);
+        let col_width = scale(data[i].value);
+
+        if (col_width + 130 > width) {
+          col_width = width - 130;
+
+          // The following is just a roundabout way to draw a zig-zag marker
+          // on the column, to indicate that it has been truncated.
+          const yScale = d3.scale.linear()
+              .domain([0, 100])
+              .range([0, height]);
+          const area = d3.svg.line()
+              .x(d => (d.x / 3) + (130 + col_width / 2))
+              .y(d => cury + yScale(d.y));
+
+          svg.append('path')
+              .datum([
+                {'x': 0, 'y': 0},
+                {'x': 25, 'y': 33},
+                {'x': 0, 'y': 66},
+                {'x': 25, 'y': 100},
+                {'x': 50, 'y': 100},
+                {'x': 25, 'y': 66},
+                {'x': 50, 'y': 33},
+                {'x': 25, 'y': 0}
+              ])
+              .attr('fill', 'white')
+              .transition()
+              .delay(200)
+              .attr('d', area);
+        }
 
         svg.append("text")
             .transition()
             .delay(200)
-            .attr("x", 130 + (labelinside ? width - 5 : width + 5))
+            .attr("x", 130 + (labelinside ? col_width - 5 : col_width + 5))
             .attr("y", cury + (height / 2))
             .attr("dominant-baseline", "middle")
             .attr("text-anchor", labelinside ? "end" : "start")
@@ -98,6 +142,7 @@ function insert_chart(target_selector, data, colors) {
       expanded = true;
     } else {
       svg.selectAll("text").remove();
+      svg.selectAll("path").remove();
 
       let curx = 0;
       svg.selectAll("rect")
