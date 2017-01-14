@@ -2,7 +2,7 @@
   "name": "kurskritikk-d3",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/d3kk.js",
   "dependencies": {
   },
   "devDependencies": {
