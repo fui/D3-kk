@@ -1,5 +1,6 @@
 .chart {
   font-family: sans-serif;
+  cursor: pointer;
 }
 
 .axis path,
