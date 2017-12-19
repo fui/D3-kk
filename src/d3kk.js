@@ -1,5 +1,5 @@
 const tooltip = d3.select("body").append("div")
-    .attr("class", "tooltip");
+    .attr("class", "d3kk-tooltip");
 
 function show_tooltip(message) {
   tooltip.html(message)
@@ -37,7 +37,7 @@ function insert_chart(target_selector, data, colors) {
   svg.selectAll("rect")
       .data(data)
     .enter().append("rect")
-      .attr("class", (d, i) => "rect-" + i)
+      .attr("class", (d, i) => "d3kk-rect-" + i)
       .attr("width", d => scale(d.value))
       .attr("height", height)
       .attr("x", d => {
@@ -60,7 +60,7 @@ function insert_chart(target_selector, data, colors) {
 
       let cury = 0;
       for (let i = 0; i < data.length; i++) {
-        svg.select(".rect-" + i)
+        svg.select(".d3kk-rect-" + i)
             .transition()
             .duration(100)
             .attr("y", cury)
@@ -230,16 +230,16 @@ let insert_stacked = function(target_selector, data, colors) {
       .y0(d => yScale(d.y0))
       .y1(d => yScale(d.y0 + d.y));
 
-  svg.selectAll(".layer")
+  svg.selectAll(".d3kk-layer")
       .data(layers)
     .enter().append("path")
-      .attr("class", "layer")
+      .attr("class", "d3kk-layer")
       .attr("d", d => area(d.values))
       .style("fill", (d, i) => colors[i])
       .on("mousemove", d => show_tooltip(d.key));
 
   svg.append("g")
-      .attr("class", "axis")
+      .attr("class", "d3kk-axis")
       .attr("transform", `translate(0,${height})`)
       .call(xAxis);
 };
